@@ -87,8 +87,7 @@ public class HelloController {
 		return "I got it successfully ::." + mbti + " " + team;
 	}
 
-	@RequestMapping(path = "/addSurvey", method = RequestMethod.POST, produces = "application/json")
-	@ResponseBody
+	@RequestMapping(path = "/addSurvey", method = RequestMethod.POST, produces = "application/json; charset=UTF8")
 	public String addSurvey(@RequestBody MBTIEntity mbtiEntity) throws ClientProtocolException, IOException {
 		String TOPIC_NAME = "survey";
 
@@ -128,7 +127,7 @@ public class HelloController {
 
 		String jsonResponse = jo1.toJSONString();
 
-		return jsonResponse + "";
+		return jsonResponse;
 	}
 
 }
