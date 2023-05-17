@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Date;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -88,12 +90,16 @@ public class HelloController {
 	}
 
 	@RequestMapping(path = "/addSurvey", method = RequestMethod.POST, produces = "application/json; charset=UTF8")
-	public String addSurvey(@RequestBody MBTIEntity mbtiEntity) throws ClientProtocolException, IOException {
+	public ResponseEntity<String> addSurvey(@RequestBody MBTIEntity mbtiEntity)
+			throws ClientProtocolException, IOException {
 		String TOPIC_NAME = "survey";
+		HttpHeaders headers = new HttpHeaders();
+    	headers.set("content-type", "text/plain;charset=UTF-8");
 
 		if (mbtiEntity == null) {
 		   	logger.info("Wrong Parameters");
-			return "Wrong Parameters";
+			return ResponseEntity.badRequest().headers(headers).body("Wrong Parameters");
+			
 		}
 
 //		Date date = new Date();
@@ -107,7 +113,7 @@ public class HelloController {
 //           	    span.setTag("topic.name", TOPIC_NAME);
 //           	    span.setTag("topic.mbti", MBTI_Table.get(mbtiIndex));
 //           	    span.setTag("topic.team", mbtiEntity.getTeam());
-//           	} else {
+//           	} else {	
 //		    logger.info("No span");
 //		}
 //		HttpRequest.sendPostRequest("http://user.mbti.net:8887/userProcess", mbtiEntity);
@@ -127,7 +133,7 @@ public class HelloController {
 
 		String jsonResponse = jo1.toJSONString();
 
-		return jsonResponse;
+		return ResponseEntity.badRequest().headers(headers).body(jsonResponse);
 	}
 
 }
