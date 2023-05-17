@@ -90,15 +90,16 @@ public class HelloController {
 	}
 
 	@RequestMapping(path = "/addSurvey", method = RequestMethod.POST, produces = "application/json; charset=UTF8")
-	public ResponseEntity<String> addSurvey(@RequestBody MBTIEntity mbtiEntity)
+	public String addSurvey(@RequestBody MBTIEntity mbtiEntity)
 			throws ClientProtocolException, IOException {
 		String TOPIC_NAME = "survey";
-		HttpHeaders headers = new HttpHeaders();
-    	headers.set("content-type", "text/plain;charset=UTF-8");
+		// HttpHeaders headers = new HttpHeaders();
+    	// headers.set("content-type", "json/application; charset=UTF-8");
 
 		if (mbtiEntity == null) {
 		   	logger.info("Wrong Parameters");
-			return ResponseEntity.badRequest().headers(headers).body("Wrong Parameters");
+			//return ResponseEntity.badRequest().headers(headers).body("Wrong Parameters");
+			return "Wrong Parameters";
 			
 		}
 
@@ -121,7 +122,7 @@ public class HelloController {
 		String nickname = mbtiEntity.getNickname();
 		String job = mbtiEntity.getJob();
 		String datadog_user = mbtiEntity.getDatadog_user();
-//		KafkaJsontemplate.send(TOPIC_NAME, mbtiEntity);
+		KafkaJsontemplate.send(TOPIC_NAME, mbtiEntity);
 //  	   	logger.info(startTime + " - Topic Name: " + TOPIC_NAME + ", job: " + job + ", nickname: " + nickname + ", datadog_user: " + datadog_user);
 //
 //		// System.out.println(mbtiEntity.getUsername());
@@ -133,7 +134,7 @@ public class HelloController {
 
 		String jsonResponse = jo1.toJSONString();
 
-		return ResponseEntity.badRequest().headers(headers).body(jsonResponse);
+		return jsonResponse;
 	}
 
 }
