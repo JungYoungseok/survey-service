@@ -17,6 +17,7 @@ import io.opentracing.Span;
 import io.opentracing.util.GlobalTracer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import org.json.simple.JSONObject;
 
 @RestController
 public class HelloController {
@@ -47,12 +48,13 @@ public class HelloController {
 
 	@Autowired
 	KafkaTemplate<String, MBTIEntity> KafkaJsontemplate;
-	KafkaTemplate<String, SurveyEntity> SurveyKafkaJsontemplate;
 
-	String TOPIC_NAME = "item";
+
+	
 
 	@RequestMapping(path = "/addMBTI", method = RequestMethod.POST)
 	public String addMBTI(@RequestBody MBTIEntity mbtiEntity) throws ClientProtocolException, IOException {
+		String TOPIC_NAME = "item";
 
 		if (mbtiEntity == null) {
 		   	logger.info("Wrong Parameters");
@@ -84,37 +86,47 @@ public class HelloController {
 		return "I got it successfully ::." + mbti + " " + team;
 	}
 
-        @RequestMapping(path = "/addSurvey", method = RequestMethod.POST)
-        public String addSurvey(@RequestBody SurveyEntity surveyEntity) throws ClientProtocolException, IOException {
+	@RequestMapping(path = "/addSurvey", method = RequestMethod.POST)
+	public String addSurvey(@RequestBody MBTIEntity mbtiEntity) throws ClientProtocolException, IOException {
+		String TOPIC_NAME = "survey";
 
-                if (surveyEntity == null) {
-                        logger.info("Wrong Parameters");
-                        return "Wrong Parameters";
-                }
+		if (mbtiEntity == null) {
+		   	logger.info("Wrong Parameters");
+			return "Wrong Parameters";
+		}
 
-                Date date = new Date();
-                //This method returns the time in millis
-                long startTime = date.getTime();
-                surveyEntity.setStartTime(startTime);
-/*
-                int mbtiIndex = Integer.parseInt(mbtiEntity.getMbti());
+		Date date = new Date();
+      		//This method returns the time in millis
+      		long startTime = date.getTime();
+		mbtiEntity.setStartTime(startTime);
+
+		int mbtiIndex = Integer.parseInt(mbtiEntity.getMbti());
                 final Span span = GlobalTracer.get().activeSpan();
-                if (span != null && mbtiIndex >=0) {
-                    span.setTag("topic.name", TOPIC_NAME);
-                    span.setTag("topic.mbti", MBTI_Table.get(mbtiIndex));
-                    span.setTag("topic.team", mbtiEntity.getTeam());
-                } else {
-                    logger.info("No span");
-                }
-		*/
-               
-				String nickname = surveyEntity.getNickname();
-                String datadog_user = surveyEntity.getDatadog_user();
-                String job = surveyEntity.getJob();
-				SurveyKafkaJsontemplate.send(TOPIC_NAME, surveyEntity);
-                logger.info(startTime + " - Topic Name: " + TOPIC_NAME + ", job: " + job + ", datadog_user: " + datadog_user, ", nickname: " + nickname);
+       	        if (span != null && mbtiIndex >=0) {
+           	    span.setTag("topic.name", TOPIC_NAME);
+           	    span.setTag("topic.mbti", MBTI_Table.get(mbtiIndex));
+           	    span.setTag("topic.team", mbtiEntity.getTeam());
+           	} else {
+		    logger.info("No span");
+		}
+		HttpRequest.sendPostRequest("http://user.mbti.net:8887/userProcess", mbtiEntity);
 
-                // System.out.println(mbtiEntity.getUsername());
-                return "I got it successfully ::." + nickname + " " + job + " " + datadog_user;
-        }
+		String nickname = mbtiEntity.getNickname();
+		String job = mbtiEntity.getJob();
+		String datadog_user = mbtiEntity.getDatadog_user();
+		KafkaJsontemplate.send(TOPIC_NAME, mbtiEntity);
+  	   	logger.info(startTime + " - Topic Name: " + TOPIC_NAME + ", job: " + job + ", nickname: " + nickname + ", datadog_user: " + datadog_user);
+
+		// System.out.println(mbtiEntity.getUsername());
+
+		JSONObject jo1 = new JSONObject();
+		jo1.put("nickname", nickname);
+		jo1.put("job", job);
+		jo1.put("datadog_user", datadog_user);
+
+		String jsonResponse = jo1.toJSONString();
+
+		return jsonResponse;
+	}
+
 }

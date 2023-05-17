@@ -35,23 +35,5 @@ public class KafkaConsumerConfig {
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
-
-    @Bean
-    public ConsumerFactory<String, SurveyEntity> surveyConsumerFactory() {
-        Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "b-1.jackymskcluster1.w889sm.c4.kafka.ap-northeast-2.amazonaws.com:9092,b-3.jackymskcluster1.w889sm.c4.kafka.ap-northeast-2.amazonaws.com:9092,b-2.jackymskcluster1.w889sm.c4.kafka.ap-northeast-2.amazonaws.com:9092");
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "techgeeknext-group");
-        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(),
-                new JsonDeserializer<>(SurveyEntity.class));
-    }
-
-    @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, SurveyEntity> surveyKafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, SurveyEntity>
-                factory = new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(surveyConsumerFactory());
-        return factory;
-    }
-
 }
 

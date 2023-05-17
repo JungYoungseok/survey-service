@@ -25,22 +25,8 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public ProducerFactory<String,SurveyEntity> surveyProducerFactory(){
-        Map<String,Object> config = new HashMap<>();
-        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,"b-1.jackymskcluster1.w889sm.c4.kafka.ap-northeast-2.amazonaws.com:9092,b-3.jackymskcluster1.w889sm.c4.kafka.ap-northeast-2.amazonaws.com:9092,b-2.jackymskcluster1.w889sm.c4.kafka.ap-northeast-2.amazonaws.com:9092");
-        config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-        return new DefaultKafkaProducerFactory(config);
-    }
-
-
-    @Bean
     public KafkaTemplate<String, MBTIEntity> kafkaTemplate(){
         return new KafkaTemplate<String, MBTIEntity>(producerFactory());
-    }
-    @Bean
-    public KafkaTemplate<String, SurveyEntity> surveyKafkaTemplate(){
-        return new KafkaTemplate<String, SurveyEntity>(surveyProducerFactory());
     }
 
 }
