@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -86,7 +87,8 @@ public class HelloController {
 		return "I got it successfully ::." + mbti + " " + team;
 	}
 
-	@RequestMapping(path = "/addSurvey", method = RequestMethod.POST)
+	@RequestMapping(path = "/addSurvey", method = RequestMethod.POST, produces = "application/json")
+	@ResponseBody
 	public String addSurvey(@RequestBody MBTIEntity mbtiEntity) throws ClientProtocolException, IOException {
 		String TOPIC_NAME = "survey";
 
