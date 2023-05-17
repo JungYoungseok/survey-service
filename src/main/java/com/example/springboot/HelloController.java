@@ -95,29 +95,29 @@ public class HelloController {
 			return "Wrong Parameters";
 		}
 
-		Date date = new Date();
-      		//This method returns the time in millis
-      		long startTime = date.getTime();
-		mbtiEntity.setStartTime(startTime);
-
-		int mbtiIndex = Integer.parseInt(mbtiEntity.getMbti());
-                final Span span = GlobalTracer.get().activeSpan();
-       	        if (span != null && mbtiIndex >=0) {
-           	    span.setTag("topic.name", TOPIC_NAME);
-           	    span.setTag("topic.mbti", MBTI_Table.get(mbtiIndex));
-           	    span.setTag("topic.team", mbtiEntity.getTeam());
-           	} else {
-		    logger.info("No span");
-		}
-		HttpRequest.sendPostRequest("http://user.mbti.net:8887/userProcess", mbtiEntity);
-
+//		Date date = new Date();
+//      		//This method returns the time in millis
+//      		long startTime = date.getTime();
+//		mbtiEntity.setStartTime(startTime);
+//
+//		int mbtiIndex = Integer.parseInt(mbtiEntity.getMbti());
+//                final Span span = GlobalTracer.get().activeSpan();
+//       	        if (span != null && mbtiIndex >=0) {
+//           	    span.setTag("topic.name", TOPIC_NAME);
+//           	    span.setTag("topic.mbti", MBTI_Table.get(mbtiIndex));
+//           	    span.setTag("topic.team", mbtiEntity.getTeam());
+//           	} else {
+//		    logger.info("No span");
+//		}
+//		HttpRequest.sendPostRequest("http://user.mbti.net:8887/userProcess", mbtiEntity);
+//
 		String nickname = mbtiEntity.getNickname();
 		String job = mbtiEntity.getJob();
 		String datadog_user = mbtiEntity.getDatadog_user();
-		KafkaJsontemplate.send(TOPIC_NAME, mbtiEntity);
-  	   	logger.info(startTime + " - Topic Name: " + TOPIC_NAME + ", job: " + job + ", nickname: " + nickname + ", datadog_user: " + datadog_user);
-
-		// System.out.println(mbtiEntity.getUsername());
+//		KafkaJsontemplate.send(TOPIC_NAME, mbtiEntity);
+//  	   	logger.info(startTime + " - Topic Name: " + TOPIC_NAME + ", job: " + job + ", nickname: " + nickname + ", datadog_user: " + datadog_user);
+//
+//		// System.out.println(mbtiEntity.getUsername());
 
 		JSONObject jo1 = new JSONObject();
 		jo1.put("nickname", nickname);
@@ -126,7 +126,7 @@ public class HelloController {
 
 		String jsonResponse = jo1.toJSONString();
 
-		return jsonResponse;
+		return jsonResponse + "";
 	}
 
 }
