@@ -134,6 +134,7 @@ public class HelloController {
 
 		//String jsonResponse = jo1.toJSONString();
 		String jsonResponse = "{\"nickname\" : \"" + nickname + "\", \"win\" : \"yes\"";
+		logger.info(jsonResponse);
 
 		return jsonResponse;
 	}
