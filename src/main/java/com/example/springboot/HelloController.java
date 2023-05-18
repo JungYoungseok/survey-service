@@ -128,9 +128,9 @@ public class HelloController {
 //		// System.out.println(mbtiEntity.getUsername());
 
 		JSONObject jo1 = new JSONObject();
-		jo1.put("nickname", nickname);
-		jo1.put("job", job);
-		jo1.put("datadog_user", datadog_user);
+		jo1.put('nickname', nickname);
+		jo1.put('job', job);
+		jo1.put('datadog_user', datadog_user);
 
 		String jsonResponse = jo1.toJSONString();
 
